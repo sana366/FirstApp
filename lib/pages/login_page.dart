@@ -11,6 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool ChangeButton = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -71,15 +72,43 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 28.0,
                     ),
-                    ElevatedButton(
-                      child: Text("Login"),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (cpntext) => homepage()));
+
+                    InkWell(
+                      onTap: () async {
+                        setState(() {
+                          ChangeButton = true;
+                        });
+                        await Future.delayed(Duration(seconds: 1));
+                        Navigator.pushNamed(context, MyRoutes.HomeRoute);
                       },
+                      child: AnimatedContainer(
+                        duration: Duration(seconds: 1),
+                        width: ChangeButton ? 50 : 150,
+                        height: 50,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.cyan,
+                            // shape: ChangeButton?BoxShape.circle:BoxShape.rectangle,
+                            borderRadius:
+                                BorderRadius.circular(ChangeButton ? 20 : 8)),
+                      ),
                     ),
+                    // ElevatedButton(
+                    //   child: Text("Login"),
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (cpntext) => homepage()));
+                    //   },
+                    // ),
                     SizedBox(
                       height: 10.0,
                     ),
