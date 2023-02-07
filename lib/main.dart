@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_myapp/pages/create_account.dart';
+import 'package:flutter_application_myapp/pages/home_page.dart';
+import 'package:flutter_application_myapp/pages/login_page.dart';
+import 'package:flutter_application_myapp/utils/routes.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-void main(List<String> args) {
-  runApp(const Myapp());
+void main() {
+  runApp(Myapp());
 }
 
 class Myapp extends StatelessWidget {
-  const Myapp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Material(
-        child: Center(
-          child: Container(
-            child: Text("welcome to UOH"),
-          ),
-        ),
+      themeMode: ThemeMode.light,
+      theme: ThemeData(
+        primarySwatch: Colors.cyan,
+        fontFamily: GoogleFonts.lato().fontFamily,
       ),
+      darkTheme: ThemeData(brightness: Brightness.dark),
+      routes: {
+        "/": (context) => LoginPage(),
+        MyRoutes.LoginRoute: (context) => LoginPage(),
+        MyRoutes.HomeRoute: (context) => homepage(),
+        MyRoutes.CreateAccountRoute: (context) => CreateAccount(),
+      },
     );
   }
 }
