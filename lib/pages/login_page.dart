@@ -52,17 +52,18 @@ class _LoginPageState extends State<LoginPage> {
             child: Form(
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
-                key: _formKey,
                 children: [
                   TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       hintText: "Enter Username",
                       labelText: "Username",
                     ),
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Username cant be empty'),
-                    ]),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Username can't be empty";
+                      }
+                      return null;
+                    },
                   ),
                   TextFormField(
                     obscureText: true,
@@ -83,37 +84,34 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 28.0,
                   ),
-
                   ElevatedButton(
                     child: Text("Login"),
                     onPressed: () {
-                      _formKey.currentState?.validate();
                       Navigator.push(context,
                           MaterialPageRoute(builder: (cpntext) => homepage()));
                     },
                   ),
-
-                  // Material(
-                  //   color: Colors.cyan,
-                  //   borderRadius: BorderRadius.circular(ChangeButton ? 20 : 8),
-                  //   child: InkWell(
-                  //     onTap: () => moveToHome(context),
-                  //     child: AnimatedContainer(
-                  //       duration: Duration(seconds: 1),
-                  //       width: ChangeButton ? 50 : 150,
-                  //       height: 50,
-                  //       alignment: Alignment.center,
-                  //       child: Text(
-                  //         "Login",
-
-                  //         style: TextStyle(
-                  //             color: Colors.black,
-                  //             fontWeight: FontWeight.bold,
-                  //             fontSize: 20),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+// Material(
+//                                       color: Colors.cyan,
+//                     borderRadius: BorderRadius.circular(ChangeButton ? 20 : 8),
+//                     child: InkWell(
+//                       onTap: () => moveToHome(context),
+//                       enableFeedback: _formKey.currentState?.validate(),
+//                       child: AnimatedContainer(
+//                         duration: Duration(seconds: 1),
+//                         width: ChangeButton ? 50 : 150,
+//                         height: 50,
+//                         alignment: Alignment.center,
+//                         child: Text(
+//                           "Login",
+//                           style: TextStyle(
+//                               color: Colors.black,
+//                               fontWeight: FontWeight.bold,
+//                               fontSize: 20),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
                   SizedBox(
                     height: 10.0,
                   ),
