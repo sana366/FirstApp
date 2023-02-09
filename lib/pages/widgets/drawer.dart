@@ -1,5 +1,8 @@
+import 'dart:js_util';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_myapp/pages/home_page.dart';
 
 class Mydrawer extends StatelessWidget {
   const Mydrawer({super.key});
@@ -14,23 +17,25 @@ class Mydrawer extends StatelessWidget {
           children: [
             DrawerHeader(
               padding: EdgeInsets.zero,
-              child: UserAccountsDrawerHeader(
-                margin: EdgeInsets.zero,
-                accountName: Text(
-                  "UOH",
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 236, 237, 240),
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                ),
-                accountEmail: Text(
-                  "webmaster@uoh.edu.pk",
-                  style: TextStyle(color: Colors.white),
-                ),
-                currentAccountPicture: CircleAvatar(
-                  radius: 170,
-                  backgroundImage:
-                      Image.asset('assets/images/profile.jpg').image,
+              child: Center(
+                child: UserAccountsDrawerHeader(
+                  margin: EdgeInsets.zero,
+                  accountName: Text(
+                    "UOH",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 236, 237, 240),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  accountEmail: Text(
+                    "webmaster@uoh.edu.pk",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  currentAccountPicture: CircleAvatar(
+                    radius: 170,
+                    backgroundImage:
+                        Image.asset('assets/images/profile.jpg').image,
+                  ),
                 ),
               ),
             ),
@@ -46,6 +51,10 @@ class Mydrawer extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (cpntext) => homepage()));
+              },
             ),
             ListTile(
               leading: Icon(
@@ -98,7 +107,28 @@ class Mydrawer extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-            )
+            ),
+            Divider(),
+            SizedBox(
+              height: 250.0,
+            ),
+            ListTile(
+              leading: Icon(
+                CupertinoIcons.arrow_3_trianglepath,
+                color: Colors.white,
+              ),
+              title: Text(
+                "Exit",
+                textScaleFactor: 1.5,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (cpntext) => homepage()));
+              },
+            ),
           ],
         ),
       ),

@@ -12,17 +12,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool ChangeButton = false;
   final _formKey = GlobalKey<FormState>();
   moveToHome(BuildContext context) async {
-    setState(() {
-      ChangeButton = true;
-    });
+    setState(() {});
     await Future.delayed(Duration(seconds: 1));
     await Navigator.pushNamed(context, MyRoutes.HomeRoute);
-    setState(() {
-      ChangeButton = false;
-    });
+    setState(() {});
   }
 
   @override
@@ -91,39 +86,47 @@ class _LoginPageState extends State<LoginPage> {
                           MaterialPageRoute(builder: (cpntext) => homepage()));
                     },
                   ),
-// Material(
-//                                       color: Colors.cyan,
-//                     borderRadius: BorderRadius.circular(ChangeButton ? 20 : 8),
-//                     child: InkWell(
-//                       onTap: () => moveToHome(context),
-//                       enableFeedback: _formKey.currentState?.validate(),
-//                       child: AnimatedContainer(
-//                         duration: Duration(seconds: 1),
-//                         width: ChangeButton ? 50 : 150,
-//                         height: 50,
-//                         alignment: Alignment.center,
-//                         child: Text(
-//                           "Login",
-//                           style: TextStyle(
-//                               color: Colors.black,
-//                               fontWeight: FontWeight.bold,
-//                               fontSize: 20),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
+
+//
                   SizedBox(
                     height: 10.0,
                   ),
                   ElevatedButton(
                     child: Text("Create Account"),
                     onPressed: () {
+                      Icon(Icons.arrow_back);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (cpntext) => CreateAccount()));
                     },
-                  )
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  
+
+                  // Material(
+                  //   color: Colors.cyan,
+                  //   borderRadius: BorderRadius.circular(50),
+                  //   child: InkWell(
+                  //     onTap: () => moveToHome(context),
+                  //     enableFeedback: _formKey.currentState?.validate(),
+                  //     child: AnimatedContainer(
+                  //       duration: Duration(seconds: 1),
+                  //       width: 70,
+                  //       height: 50,
+                  //       alignment: Alignment.center,
+                  //       child: Text(
+                  //         "",
+                  //         style: TextStyle(
+                  //             color: Colors.black,
+                  //             fontWeight: FontWeight.bold,
+                  //             fontSize: 20),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
