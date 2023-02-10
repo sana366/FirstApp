@@ -10,7 +10,10 @@ class homepage extends StatelessWidget {
     return Material(
       child: Scaffold(
           appBar: AppBar(
-            title: Text("University Of Haripur"),
+            title: Text(
+              "University Of Haripur",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           body: Center(
             child: Column(
@@ -23,19 +26,17 @@ class homepage extends StatelessWidget {
                   height: 100,
                   color: Colors.cyan,
                   alignment: Alignment.center,
-            
                   child: Text(
                     "Important Links",
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
-                
                 ),
                 SizedBox(
                   height: 358.0,
                 ),
                 CircleAvatar(
                   radius: 30,
-                   backgroundColor: Color(0xff4c505b),
+                  backgroundColor: Color(0xff4c505b),
                   child: IconButton(
                     color: Colors.white,
                     onPressed: () {
