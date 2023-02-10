@@ -6,10 +6,11 @@ import 'package:flutter_application_myapp/utils/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(Myapp());
+  runApp(MyApp());
 }
 
-class Myapp extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -23,17 +23,19 @@ class homepage extends StatelessWidget {
                   height: 100,
                   color: Colors.cyan,
                   alignment: Alignment.center,
+            
                   child: Text(
                     "Important Links",
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
+                
                 ),
                 SizedBox(
                   height: 358.0,
                 ),
                 CircleAvatar(
                   radius: 30,
-                  backgroundColor: Color(0xff4c505b),
+                   backgroundColor: Color(0xff4c505b),
                   child: IconButton(
                     color: Colors.white,
                     onPressed: () {
