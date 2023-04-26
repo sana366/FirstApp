@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_myapp/pages/widgets/drawer.dart';
+
+import 'package:http/http.dart';
 
 class Profile_page extends StatefulWidget {
   String name;
@@ -42,6 +46,37 @@ class _Profile_pageState extends State<Profile_page> {
       TextEditingController _Whatsapp = TextEditingController();
       TextEditingController _Domicile = TextEditingController();
       TextEditingController _Paddress = TextEditingController();
+
+       Profile(String rollno, password) async {
+    try {
+      Response response = await post(Uri.parse('https://studentportal.uoh.edu.pk/api_login'),
+          body: {'rollno': rollno, 'password': password});
+      if (response.statusCode == 200)
+       {
+        var data = jsonDecode(response.body.toString());
+        print(data['token']);
+        print("data is uploaded sucessfully");
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Profile_page(
+                                                  name: _name.text,
+                                                  Fathername: _Fathername.text,
+                                                  CNIC: _CNIC.text,
+                                                  Cellno: _Cellno.text,
+                                                  Email: _Email.text,
+                                                  Whatsapp: _Whatsapp.text,
+                                                  Domicile: _Domicile.text,
+                                                  Paddress: _Paddress.text,
+                                                )));
+      }  {
+        print('failed');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Invalid credentials.")));
+      print(e.toString());
+    }
+  }
+
       showDialog(
           context: context,
           builder: (context) {
@@ -503,19 +538,16 @@ class _Profile_pageState extends State<Profile_page> {
                                         fontStyle: FontStyle.normal),
                                   ),
                                   onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (cpntext) => Profile_page(
-                                                  name: _name.text,
-                                                  Fathername: _Fathername.text,
-                                                  CNIC: _CNIC.text,
-                                                  Cellno: _Cellno.text,
-                                                  Email: _Email.text,
-                                                  Whatsapp: _Whatsapp.text,
-                                                  Domicile: _Domicile.text,
-                                                  Paddress: _Paddress.text,
-                                                )));
+                                    
+                                    //  Profile(   name: _name.text,
+                                    //               Fathername: _Fathername.text,
+                                    //               CNIC: _CNIC.text,
+                                    //               Cellno: _Cellno.text,
+                                    //               Email: _Email.text,
+                                    //               Whatsapp: _Whatsapp.text,
+                                    //               Domicile: _Domicile.text,
+                                    //               Paddress: _Paddress.text,
+                                    //  )
                                   }
                                   // validate,
                                   ),

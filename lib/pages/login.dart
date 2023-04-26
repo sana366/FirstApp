@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-// import 'package:flutter_session/flutter_session.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-// import '../provider/login_provider.dart';
 import 'home_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -28,8 +25,62 @@ class _Login_pageState extends State<Login_page> {
   // }
 
   // bool isHiddenPassword = true;
+  /// Please Run application And check
   TextEditingController rollnoController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  login(String rollno, String password) async {
+    Map<String, String> body = {
+      "device": 'android',
+      "password": '37232',
+      "token": 'asdf@123',
+      "rollno": 'F22-2014'
+    };
+    // Is your Mobile Connected with internet?yes
+    /// i understand what is the issue wait
+    print("Inside Funcation");
+
+    try {
+      final url = Uri.parse('https://studentportal.uoh.edu.pk/api_login');
+
+      var request = http.MultipartRequest('POST', url)..fields.addAll(body);
+
+      var response = await request.send();
+      final respStr = await response.stream.bytesToString();
+      if (response.statusCode == 200) {
+        print(jsonDecode(respStr));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => homepage()));
+
+        print("This is the Status Code$respStr");
+        var encoded = json.decode(respStr);
+
+        ///Worked ////////
+        ///
+        ///Worked  fine , check response okay
+        print(encoded['status']);
+        // http.Response response = await http.post(
+        //     Uri.parse("https://studentportal.uoh.edu.pk/api_login"),
+        //     body: json.encode(body));
+        // print(response.statusCode);
+        // if (response.statusCode == 200) {
+        //   var data = jsonDecode(response.body.toString());
+        //   print(data['token']);
+        //   print("data is uploaded sucessfully");
+        //   Navigator.push(
+        //       context, MaterialPageRoute(builder: (context) => homepage()));
+        // } else {
+        //   print('failed');
+        // }
+      } else {
+        print('failed');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Invalid credentials.")));
+      print(e.toString());
+    }
+  }
 
   // final storage = new FlutterSecureStorage();
   @override
@@ -256,34 +307,6 @@ class _Login_pageState extends State<Login_page> {
   //   setState(() {});
   // }
 
-  login(String rollno, password) async {
-    try {
-      var response = await post(
-          Uri.parse('https://reqres.in/api/login'),
-          body: {'rollno': rollno, 'password': password});
-      // if (response.statusCode == 200)
-
-      // var post = await http.post(url, body: data);
-      // if (post.statusCode == 200)
-      {
-        var data = jsonDecode(response.body.toString());
-        print(data);
-        // var jsonData = jsonDecode(post.body);
-        // print(jsonData);
-        // print(emailController);
-        // print(passwordController);
-        print("data is uploaded sucessfully");
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => homepage()));
-      } {
-        print("Error during posting data");
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Invalid credentials.")));
-      print(e.toString());
-    }
-  }
   // Future<void> login() async {
   //   if (passwordController.text.isNotEmpty && emailController.text.isNotEmpty) {
   //     var response = await http.post(
