@@ -46,6 +46,11 @@ dependencies:
   get: ^4.6.5
   flutter_secure_storage: ^4.2.1
   flutter_weather_bg_null_safety: ^1.0.0
+  email_validator: ^2.1.17
+ 
+ 
+
+
 
   # flutter_advanced_drawer: ^1.3.2
   # introduction_screen: ^3.0.2

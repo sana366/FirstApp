@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 // import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/api-response.dart';
 import 'home_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -15,72 +18,85 @@ class Login_page extends StatefulWidget {
 }
 
 class _Login_pageState extends State<Login_page> {
-  // GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  // void validate() {
-  //   if (formkey.currentState!.validate()) {
-  //     print("Validated");
-  //   } else {
-  //     print("Not Validated");
-  //   }
-  // }
+  // static const API_URL = 'https://studentportal.uoh.edu.pk/api_login';
+  // static const STORAGE_KEY = 'user_credentials';
+  final _formKey = GlobalKey<FormState>();
+  void validate() {
+    if (_formKey.currentState!.validate()) {
+      print("Validated");
+    } else {
+      print("Not Validated");
+    }
+  }
 
-  // bool isHiddenPassword = true;
-  /// Please Run application And check
-  TextEditingController rollnoController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  var rollnoController = TextEditingController();
+  var passwordController = TextEditingController();
 
-  login(String rollno, String password) async {
-    Map<String, String> body = {
-      "device": 'android',
-      "password": '37232',
-      "token": 'asdf@123',
-      "rollno": 'F22-2014'
-    };
-    // Is your Mobile Connected with internet?yes
-    /// i understand what is the issue wait
-    print("Inside Funcation");
-
+  Future<void> login(String rollno, String password) async {
     try {
       final url = Uri.parse('https://studentportal.uoh.edu.pk/api_login');
+      final headers = {'content-Type': 'application/json'};
+      if (passwordController.text.isNotEmpty &&
+          rollnoController.text.isNotEmpty) {
+        // Map<String, dynamic> body =
+        //     ({'rollno': 'F22-2014', 'password': '37232'});
 
-      var request = http.MultipartRequest('POST', url)..fields.addAll(body);
+        var response = await http.post(
+            Uri.parse("https://studentportal.uoh.edu.pk/api_login"),
+            body: ({
+              'device': 'andriod',
+              'token': 'asdf@123',
+              'rollno': rollnoController.text,
+              'password': passwordController.text,
+            }));
 
-      var response = await request.send();
-      final respStr = await response.stream.bytesToString();
-      if (response.statusCode == 200) {
-        print(jsonDecode(respStr));
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => homepage()));
-
-        print("This is the Status Code$respStr");
-        var encoded = json.decode(respStr);
-
-        ///Worked ////////
-        ///
-        ///Worked  fine , check response okay
-        print(encoded['status']);
-        // http.Response response = await http.post(
-        //     Uri.parse("https://studentportal.uoh.edu.pk/api_login"),
-        //     body: json.encode(body));
-        // print(response.statusCode);
-        // if (response.statusCode == 200) {
-        //   var data = jsonDecode(response.body.toString());
-        //   print(data['token']);
-        //   print("data is uploaded sucessfully");
-        //   Navigator.push(
-        //       context, MaterialPageRoute(builder: (context) => homepage()));
-        // } else {
-        //   print('failed');
-        // }
+        if (response.statusCode == 200) {
+          final jsonResponse = json.decode(response.body);
+          final apiResponse = ApiResponse.fromJson(jsonResponse);
+          if (apiResponse.response == 'success') {
+            print('Success! Response body: ${response.body}');
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => homepage()));
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Invalid Credentials.")));
+            print('Request failed with status: ${response.statusCode}.');
+          }
+        }
       } else {
-        print('failed');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Blankfield not allowed.")));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Invalid credentials.")));
       print(e.toString());
     }
   }
+
+//     Future<void> login(String rollno, String password) async {
+//    var headers = {
+//   'Cookie': 'Cookie_1=value; ci_session=b35q32c7fmlfpcctg5s5dacd56maomqv'
+// };
+// var request = http.MultipartRequest('POST', Uri.parse('https://studentportal.uoh.edu.pk/api_login'));
+// request.fields.addAll({
+//   'device': 'android',
+//   'token': 'asdf@123',
+//   'rollno': 'rollnoController.text',
+//   'password': 'passwordController.text',
+// });
+
+// request.headers.addAll(headers);
+
+// http.StreamedResponse response = await request.send();
+
+// if (response.statusCode == 200) {
+//   print(await response.stream.bytesToString());
+//    Navigator.push(
+//             context, MaterialPageRoute(builder: (context) => homepage()));
+// }
+// else {
+//   print(response.reasonPhrase);
+// }
+//   }
 
   // final storage = new FlutterSecureStorage();
   @override
@@ -185,6 +201,18 @@ class _Login_pageState extends State<Login_page> {
                                   // color: Colors.grey,
                                 ),
                               ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                } else if (RegExp(r'^\d{1,3}-\d{3}')
+                                    .hasMatch(value)) {
+                                  return 'Please enter a valid email address';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                rollnoController != value;
+                              },
                               // validator: (value) {
                               //   if (value!.isEmpty) {
                               //     return "ID can't be empty";
@@ -227,6 +255,15 @@ class _Login_pageState extends State<Login_page> {
                                   // color: Colors.grey,
                                 ),
                               ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                passwordController != value;
+                              },
                               // validator: (value) {
                               //   if (value!.isEmpty) {
                               //     return "Password can't be empty";
@@ -255,6 +292,8 @@ class _Login_pageState extends State<Login_page> {
                               onPressed:
                                   // validate,
                                   () async {
+                                // login(rollnoController.text.toString(),
+                                //     passwordController.text.toString());
                                 login(rollnoController.text.toString(),
                                     passwordController.text.toString());
                                 // final SharedPreferences sharedPreferences =
@@ -272,9 +311,8 @@ class _Login_pageState extends State<Login_page> {
                                 //       context,
                                 //       MaterialPageRoute(
                                 //           builder: (cpntext) => homepage()));
-                              }
-                              // }
-                              ),
+                                // }
+                              }),
                         ]),
                       ),
                     ),
@@ -307,21 +345,25 @@ class _Login_pageState extends State<Login_page> {
   //   setState(() {});
   // }
 
-  // Future<void> login() async {
-  //   if (passwordController.text.isNotEmpty && emailController.text.isNotEmpty) {
+  // Future<void> login(String rollno, String password) async {
+  //   var headers = {
+  //     'Cookie': 'Cookie_1=value; ci_session=b35q32c7fmlfpcctg5s5dacd56maomqv'
+  //   };
+  //   if (passwordController.text.isNotEmpty &&
+  //       rollnoController.text.isNotEmpty) {
   //     var response = await http.post(
   //         Uri.parse("https://studentportal.uoh.edu.pk/api_login"),
   //         body: ({
-  //           'email': emailController.text,
+  //           'rollno': rollnoController.text,
   //           'password': passwordController.text,
   //         }));
 
-  //     if (response.statusCode == 200 )
+  //     if (response.statusCode == 200) print(response.statusCode);
   //     {
-
   //       Navigator.push(
   //           context, MaterialPageRoute(builder: (context) => homepage()));
-  //     }  {
+  //     }
+  //     {
   //       ScaffoldMessenger.of(context)
   //           .showSnackBar(SnackBar(content: Text("Invalid credentials.")));
   //     }
