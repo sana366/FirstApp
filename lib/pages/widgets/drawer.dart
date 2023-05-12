@@ -1,5 +1,4 @@
 // import 'dart:js_util';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_myapp/pages/home_page.dart';
@@ -21,9 +20,11 @@ class _MydrawerState extends State<Mydrawer> {
   TextEditingController _CNIC = TextEditingController();
   TextEditingController _Cellno = TextEditingController();
   TextEditingController _Email = TextEditingController();
-  TextEditingController _Whatsapp = TextEditingController();
+  TextEditingController _phoneno = TextEditingController();
   TextEditingController _Domicile = TextEditingController();
   TextEditingController _Paddress = TextEditingController();
+  TextEditingController _rollno = TextEditingController();
+  TextEditingController _regno = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -209,9 +210,11 @@ class _MydrawerState extends State<Mydrawer> {
                                           CNIC: _CNIC.text,
                                           Cellno: _Cellno.text,
                                           Email: _Email.text,
-                                          Whatsapp: _Whatsapp.text,
+                                          phoneno: _phoneno.text,
                                           Domicile: _Domicile.text,
                                           Paddress: _Paddress.text,
+                                          rollno: _rollno.text,
+                                          regno: _regno.text,
                                         )));
                           },
                         ),

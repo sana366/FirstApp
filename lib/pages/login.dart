@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +9,57 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/api-response.dart';
 import 'home_page.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:flutter_session/flutter_session.dart';
+// late String finalEmail;
 
 class Login_page extends StatefulWidget {
-  const Login_page({super.key});
+  const Login_page({
+    super.key,
+  });
 
   @override
   State<Login_page> createState() => _Login_pageState();
 }
 
 class _Login_pageState extends State<Login_page> {
+  @override
+  void initState() {
+
+    super.initState();
+    _isObsecured = true;
+    _checkIfLoggedIn();
+  }
+
+  void _checkIfLoggedIn() async {
+    var token = await _getTokenFromStorage();
+    if (token != null) {
+      setState(() {
+        isLoggedIn = true;
+        token = rollnoController.text;
+      });
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => homepage()));
+    }
+  }
+
+  Future<String> _getTokenFromStorage() async {
+    // TODO: Implement a secure way to store the token
+    // For example, you can use Flutter Secure Storage package
+    // Here we're just storing the token in memory for simplicity
+    return rollnoController.text;
+  }
+
+  // Future getValidationData() async {
+  //   final SharedPreferences sharedPreferences =
+  //       await SharedPreferences.getInstance();
+  //   var obtainedEmail = sharedPreferences.getString('rollno');
+  //   setState(() {
+  //     finalEmail = obtainedEmail;
+  //   });
+  //   print(finalEmail);
+  // }
+
   // static const API_URL = 'https://studentportal.uoh.edu.pk/api_login';
   // static const STORAGE_KEY = 'user_credentials';
   final _formKey = GlobalKey<FormState>();
@@ -31,23 +73,49 @@ class _Login_pageState extends State<Login_page> {
 
   var rollnoController = TextEditingController();
   var passwordController = TextEditingController();
+  var _isObsecured;
+  bool isLoading = false;
+  bool isLoggedIn = false;
+  late String token;
+
+  @override
+  void dispose() {
+    rollnoController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _storeToken(String rollno) async {
+    //  Implement a secure way to store the token
+    // For example, you can use Flutter Secure Storage package
+    // Here we're just storing the token in memory for simplicity
+    token = rollno;
+  }
 
   Future<void> login(String rollno, String password) async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final url = Uri.parse('https://studentportal.uoh.edu.pk/api_login');
-      final headers = {'content-Type': 'application/json'};
+      print("hello test here...!");
+      final headers = {
+        'content-Type': 'application/json',
+        //  'Charset': 'utf-8'
+      };
       if (passwordController.text.isNotEmpty &&
           rollnoController.text.isNotEmpty) {
         // Map<String, dynamic> body =
         //     ({'rollno': 'F22-2014', 'password': '37232'});
+        print("hello test here...!");
 
         var response = await http.post(
             Uri.parse("https://studentportal.uoh.edu.pk/api_login"),
             body: ({
-              'device': 'andriod',
-              'token': 'asdf@123',
-              'rollno': rollnoController.text,
-              'password': passwordController.text,
+              "device": "andriod",
+              "token": "asdf@123",
+              "rollno": rollnoController.text,
+              "password": passwordController.text,
             }));
 
         if (response.statusCode == 200) {
@@ -55,50 +123,39 @@ class _Login_pageState extends State<Login_page> {
           final apiResponse = ApiResponse.fromJson(jsonResponse);
           if (apiResponse.response == 'success') {
             print('Success! Response body: ${response.body}');
+            await _storeToken(
+              apiResponse.rollno,
+            );
+            setState(() {
+              isLoggedIn = true;
+              isLoading = false;
+            });
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => homepage()));
           } else {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text("Invalid Credentials.")));
+            setState(() {
+              isLoading = false;
+            });
             print('Request failed with status: ${response.statusCode}.');
           }
         }
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Blankfield not allowed.")));
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       print(e.toString());
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
-//     Future<void> login(String rollno, String password) async {
-//    var headers = {
-//   'Cookie': 'Cookie_1=value; ci_session=b35q32c7fmlfpcctg5s5dacd56maomqv'
-// };
-// var request = http.MultipartRequest('POST', Uri.parse('https://studentportal.uoh.edu.pk/api_login'));
-// request.fields.addAll({
-//   'device': 'android',
-//   'token': 'asdf@123',
-//   'rollno': 'rollnoController.text',
-//   'password': 'passwordController.text',
-// });
-
-// request.headers.addAll(headers);
-
-// http.StreamedResponse response = await request.send();
-
-// if (response.statusCode == 200) {
-//   print(await response.stream.bytesToString());
-//    Navigator.push(
-//             context, MaterialPageRoute(builder: (context) => homepage()));
-// }
-// else {
-//   print(response.reasonPhrase);
-// }
-//   }
-
-  // final storage = new FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -159,11 +216,6 @@ class _Login_pageState extends State<Login_page> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(7)),
                         color: Colors.white,
-                        // border: Border(
-                        //   top: BorderSide(
-                        //       color: Color.fromARGB(255, 67, 2, 78),
-                        //       width: 3.0),
-                        // ),
                       ),
                       child: Padding(
                         padding: EdgeInsets.only(),
@@ -231,9 +283,21 @@ class _Login_pageState extends State<Login_page> {
                             child: TextFormField(
                               controller: passwordController,
 
-                              obscureText: true,
+                              obscureText: _isObsecured,
                               // cursorColor: Color.fromARGB(255, 67, 2, 78),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(left: 12),
+                                  child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObsecured = !_isObsecured;
+                                        });
+                                      },
+                                      icon: _isObsecured
+                                          ? Icon(Icons.visibility)
+                                          : Icon(Icons.visibility_off)),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
 
@@ -292,26 +356,9 @@ class _Login_pageState extends State<Login_page> {
                               onPressed:
                                   // validate,
                                   () async {
-                                // login(rollnoController.text.toString(),
-                                //     passwordController.text.toString());
+                              
                                 login(rollnoController.text.toString(),
                                     passwordController.text.toString());
-                                // final SharedPreferences sharedPreferences =
-                                //     await SharedPreferences.getInstance();
-                                // sharedPreferences.setString(
-                                //     'email', emailController.text);
-                                // sharedPreferences.setString(
-                                //     'token', 'asdf@123');
-                                // Get.to(homepage());
-
-                                //  FlutterSession().set('token', '');
-
-                                // if (formkey.currentState!.validate()) {
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //           builder: (cpntext) => homepage()));
-                                // }
                               }),
                         ]),
                       ),
@@ -319,15 +366,7 @@ class _Login_pageState extends State<Login_page> {
                   ),
                 ),
 
-                // Center(
-                //   child: Container(
-                //     width: 50,
-                //     height: 50,
-                //     decoration: BoxDecoration(
-                //       color: Colors.white,
-                //     ),
-                //   ),
-                // )
+              
               ],
             ),
           ),
@@ -336,40 +375,14 @@ class _Login_pageState extends State<Login_page> {
     );
   }
 
-  // void _togglePasswordView() {
-  //   if (isHiddenPassword == true) {
-  //     isHiddenPassword = false;
-  //   } else {
-  //     isHiddenPassword = true;
-  //   }
-  //   setState(() {});
-  // }
+ 
+  Future<void> _logout() async {
+    // clear authentication data from storage (e.g. token, username, password)
+    // ...
 
-  // Future<void> login(String rollno, String password) async {
-  //   var headers = {
-  //     'Cookie': 'Cookie_1=value; ci_session=b35q32c7fmlfpcctg5s5dacd56maomqv'
-  //   };
-  //   if (passwordController.text.isNotEmpty &&
-  //       rollnoController.text.isNotEmpty) {
-  //     var response = await http.post(
-  //         Uri.parse("https://studentportal.uoh.edu.pk/api_login"),
-  //         body: ({
-  //           'rollno': rollnoController.text,
-  //           'password': passwordController.text,
-  //         }));
-
-  //     if (response.statusCode == 200) print(response.statusCode);
-  //     {
-  //       Navigator.push(
-  //           context, MaterialPageRoute(builder: (context) => homepage()));
-  //     }
-  //     {
-  //       ScaffoldMessenger.of(context)
-  //           .showSnackBar(SnackBar(content: Text("Invalid credentials.")));
-  //     }
-  //   } else {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text("Blank Field not allowed")));
-  //   }
-  // }
+    // set isLoggedIn to false
+    setState(() {
+      isLoggedIn = false;
+    });
+  }
 }

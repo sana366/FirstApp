@@ -1,12 +1,13 @@
 // import 'dart:convert';
 import 'dart:async';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_myapp/pages/login.dart';
 import 'package:flutter_application_myapp/pages/login_page.dart';
 import 'package:flutter_application_myapp/pages/widgets/drawer.dart';
-import 'package:get/get.dart';
+import 'package:flutter_session/flutter_session.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_session/flutter_session.dart';
 
@@ -15,28 +16,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 // String? finalEmail;
 
 class homepage extends StatefulWidget {
+
+  //  final Function _logout;
+  // HomePage({required this._logout});
+  
   @override
   State<homepage> createState() => _homepageState();
 }
 
 class _homepageState extends State<homepage> {
-  // @override
-  // void initState() {
-  //   getVallidationData().whenComplete(() async {
-  //     Timer(Duration(seconds: 2),
-  //         () => Get.to(finalEmail != null ? homepage() : Login_page()));
-  //   });
-  // }
 
-  // Future getVallidationData() async {
-  //   final SharedPreferences sharedPreferences =
-  //       await SharedPreferences.getInstance();
-  //   var obtainedEmail = sharedPreferences.getString('email');
-  //   setState(() {
-  //     finalEmail = obtainedEmail;
-  //   });
-  // }
-
+  
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -72,27 +62,23 @@ class _homepageState extends State<homepage> {
                   color: Colors.white),
             ),
             actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: IconButton(
-                    onPressed: () {}, icon: Icon(Icons.zoom_out_map_outlined)),
-              ),
+              
               Padding(
                 padding: EdgeInsets.only(top: 0, bottom: 0, right: 0),
                 child: TextButton(
-                    onPressed: () {
-                      // isloggedin = false;
+                    onPressed: () async {
+                     
+                      // _logout(context);
+
                       // final SharedPreferences sharedPreferences =
                       //     await SharedPreferences.getInstance();
-                      // sharedPreferences.remove('email');
-                      //     sharedPreferences.setString(
-                      //               'token', 'asdf@123');
+                      // sharedPreferences.remove('rollno');
                       // Get.to(Login_page());
-                      // FlutterSession().set('token', '');
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (cpntext) => Login_page()));
+
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (cpntext) => Login_page()));
                     },
                     child: Text(
                       'Logout ',
@@ -112,99 +98,114 @@ class _homepageState extends State<homepage> {
               )),
             ),
           ),
-          body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  // FutureBuilder(
-                  //     future: FlutterSession().get('token'),
-                  //     builder: (context, snapshot) {
-                  //       return Text(
-                  //           snapshot.hasData ? snapshot.data : 'Loading...');
-                  //     }),
-                  // RadioListTile<ThemeMode>
-                  // (title: Text('light mode'),
-                  //   value: ThemeMode.light,
-                  //  groupValue: ThemeChanger.themeMode,
-                  //   onChanged: onChanged)
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: 320,
-                    height: 250,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 154, 2, 93),
-                        Color.fromARGB(233, 26, 31, 31),
-                      ],
-                      end: Alignment.bottomLeft,
-                      begin: Alignment.topRight,
-                    )),
-                  ),
-                  SizedBox(
-                    height: 28.0,
-                  ),
+          body: Center(
+            child: Column(
+              children: <Widget>[
+                //  FutureBuilder(
+                //    future : FlutterSession().get('token'),
+                //   builder: (context, snapshot){
+                //   return Text(snapshot.hasData ? snapshot.data : 'Loading...');
+                // }),
 
-                  // Container(
-                  //   width: 100,
-                  //   height: 100,
-                  //   child: Text(
-                  //     "Important Links",
-                  //     style: TextStyle(
-                  //         fontWeight: FontWeight.w900, color: Colors.grey),
-                  //   ),
-                  //   decoration: BoxDecoration(
-                  //     image: DecorationImage(
-                  //       image: AssetImage(
-                  //         "assets/images/link.png",
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // // ElevatedButton(onPressed: () {}, child: child),
-                  // SizedBox(
-                  //   height: 28.0,
-                  // ),
-                  // Container(
-                  //   width: 100,
-                  //   height: 100,
-                  //   child: Text(
-                  //     "UOH Gallery",
-                  //     style: TextStyle(
-                  //         fontWeight: FontWeight.w900, color: Colors.grey),
-                  //   ),
-                  //   decoration: BoxDecoration(
-                  //     image: DecorationImage(
-                  //       image: AssetImage("assets/images/gallery.jpg"),
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 28.0,
-                  // ),
-                  // CircleAvatar(
-                  //   radius: 30,
-                  //   backgroundColor: Color(0xff4c505b),
-                  //   child: IconButton(
-                  //     color: Colors.white,
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //               builder: (cpntext) => LoginPage()));
-                  //     },
-                  //     icon: Icon(Icons.arrow_back),
-                  //   ),
-                  // ),
-                ],
-              ),
+                // RadioListTile<ThemeMode>
+                // (title: Text('light mode'),
+                //   value: ThemeMode.light,
+                //  groupValue: ThemeChanger.themeMode,
+                //   onChanged: onChanged)
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  width: 320,
+                  height: 250,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 154, 2, 93),
+                      Color.fromARGB(233, 26, 31, 31),
+                    ],
+                    end: Alignment.bottomLeft,
+                    begin: Alignment.topRight,
+                  )),
+                ),
+                SizedBox(
+                  height: 28.0,
+                ),
+
+                // Container(
+                //   width: 100,
+                //   height: 100,
+                //   child: Text(
+                //     "Important Links",
+                //     style: TextStyle(
+                //         fontWeight: FontWeight.w900, color: Colors.grey),
+                //   ),
+                //   decoration: BoxDecoration(
+                //     image: DecorationImage(
+                //       image: AssetImage(
+                //         "assets/images/link.png",
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // // ElevatedButton(onPressed: () {}, child: child),
+                // SizedBox(
+                //   height: 28.0,
+                // ),
+                // Container(
+                //   width: 100,
+                //   height: 100,
+                //   child: Text(
+                //     "UOH Gallery",
+                //     style: TextStyle(
+                //         fontWeight: FontWeight.w900, color: Colors.grey),
+                //   ),
+                //   decoration: BoxDecoration(
+                //     image: DecorationImage(
+                //       image: AssetImage("assets/images/gallery.jpg"),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 28.0,
+                // ),
+                // CircleAvatar(
+                //   radius: 30,
+                //   backgroundColor: Color(0xff4c505b),
+                //   child: IconButton(
+                //     color: Colors.white,
+                //     onPressed: () {
+                //       Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (cpntext) => LoginPage()));
+                //     },
+                //     icon: Icon(Icons.arrow_back),
+                //   ),
+                // ),
+              ],
             ),
           ),
           drawer: Mydrawer()),
     );
   }
+
+  // void _logout(BuildContext context) async {
+  //   // Clear saved authentication token
+  //   setState(() {
+    
+  //   });
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.remove('rollno');
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => Login_page()),
+  //   );
+  //   // Navigate back to login screen
+  //   // Navigator.pushReplacementNamed(context, '/ Login_page()');
+  // }
+  
 }
+
+
+
