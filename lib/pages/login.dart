@@ -25,7 +25,6 @@ class Login_page extends StatefulWidget {
 class _Login_pageState extends State<Login_page> {
   @override
   void initState() {
-
     super.initState();
     _isObsecured = true;
     _checkIfLoggedIn();
@@ -356,7 +355,6 @@ class _Login_pageState extends State<Login_page> {
                               onPressed:
                                   // validate,
                                   () async {
-                              
                                 login(rollnoController.text.toString(),
                                     passwordController.text.toString());
                               }),
@@ -365,8 +363,6 @@ class _Login_pageState extends State<Login_page> {
                     ),
                   ),
                 ),
-
-              
               ],
             ),
           ),
@@ -375,7 +371,6 @@ class _Login_pageState extends State<Login_page> {
     );
   }
 
- 
   Future<void> _logout() async {
     // clear authentication data from storage (e.g. token, username, password)
     // ...

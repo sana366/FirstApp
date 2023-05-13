@@ -14,35 +14,37 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  List<ProfileApi> profileApi = [];
+  // List<ProfileApi> profileApi = [];
+  late String stringResponse;
   var device = TextEditingController();
   var token = TextEditingController();
   var rollno = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getData(device.text.toString(), token.text.toString(),
-            rollno.text.toString()),
+        future: getData(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-                itemCount: profileApi.length,
+                // itemCount: profileApi.length,
                 itemBuilder: (context, rollno) {
-                  return Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.black12,
-                    ),
-                    child: Column(
-                      children: [
-                        Text.rich(TextSpan(children: [
-                          TextSpan(text: 'Data'),
-                          TextSpan(text: 'data'),
-                        ]))
-                      ],
-                    ),
-                  );
-                });
+              return Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(31, 155, 25, 25),
+                ),
+                child: Column(
+                  children: [
+                    Text.rich(TextSpan(children: [
+                      TextSpan(
+                          text: 'Data', style: TextStyle(color: Colors.black)),
+                       Text(stringResponse.toString()),
+                      TextSpan(text: 'data'),
+                    ]))
+                  ],
+                ),
+              );
+            });
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -75,32 +77,53 @@ class _EditProfileState extends State<EditProfile> {
   //     return profileApi;
   //   }
   // }
-  Future<List<ProfileApi>> getData(
-    String device,
-    String token,
-    String rollno,
-  ) async {
-    final response = await http.get(
-        Uri.parse('$baseUrl/data?device=$device&token=$token&rollno=$rollno'));
- final headers = {
-        'content-Type': 'application/json',
-    
-      };
+  // Future<ProfileApi> getData(
+  //   String device,
+  //   String token,
+  //   String rollno,
+  // ) async {
+  //   var url =
+  //       "$baseUrl?device=" + device + "&token=" + token + "&rollno=" + rollno;
+  //   final response = await http.get(Uri.parse(url));
+  //   final headers = {
+  //     'content-Type': 'application/json',
+  //   };
+
+  //   // var res = ProfileApi.fromJson(json.decode(response.body));
+  //   // return res;
+
+  //   print('test baseUrl:${baseUrl}');
+
+  //   if (response.statusCode == 200) {
+  //     final jsonResponse = json.decode(response.body);
+  //     final apiResponse = ProfileApi.fromJson(jsonResponse);
+  //     if (apiResponse.response == 'success') {
+  //       print('Success! Response body: ${response.body}');
+
+  //       // List<dynamic> responseData = json.decode(response.body);
+  //       // profileApi =
+  //       //     responseData.map((data) => ProfileApi.fromJson(data)).toList();
+  //       // return profileApi;
+  //     } else {
+  //       print('Failed to fetch data: ${response.statusCode}');
+  //     }
+  //   }
+  //   throw Exception('Failed to fetch data: ${response.statusCode}');
+  // }
+
+  Future getData() async {
+    http.Response response;
+    response = await http.get(Uri.parse(
+        'https://studentportal.uoh.edu.pk/api_profile?device=android&token=asdf@123&rollno=F22-2014'));
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      final apiResponse = ProfileApi.fromJson(jsonResponse);
-      if (apiResponse.response == 'success') {
-        print('Success! Response body: ${response.body}');
-        
-        // List<dynamic> responseData = json.decode(response.body);
-        // profileApi =
-        //     responseData.map((data) => ProfileApi.fromJson(data)).toList();
-        // return profileApi;
-      } else {
-        print('Failed to fetch data: ${response.statusCode}');
-          
-      }
+      setState(() {
+        stringResponse = response.body;
+      });
     }
- throw Exception('Failed to fetch data: ${response.statusCode}');
+  }
+  @override
+  void initState(){
+    getData();
+    super.initState();
   }
 }
