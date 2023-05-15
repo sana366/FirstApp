@@ -1,21 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 // import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
 import '../utils/api-response.dart';
 import 'home_page.dart';
-import 'package:get/get.dart';
-import 'package:flutter_session/flutter_session.dart';
+
 // late String finalEmail;
 
 class Login_page extends StatefulWidget {
   const Login_page({
-    super.key,
+    key,
   });
 
   @override
@@ -32,6 +31,7 @@ class _Login_pageState extends State<Login_page> {
 
   void _checkIfLoggedIn() async {
     var token = await _getTokenFromStorage();
+    // ignore: unnecessary_null_comparison
     if (token != null) {
       setState(() {
         isLoggedIn = true;
@@ -96,8 +96,10 @@ class _Login_pageState extends State<Login_page> {
       isLoading = true;
     });
     try {
+      // ignore: unused_local_variable
       final url = Uri.parse('https://studentportal.uoh.edu.pk/api_login');
       print("hello test here...!");
+      // ignore: unused_local_variable
       final headers = {
         'content-Type': 'application/json',
         //  'Charset': 'utf-8'

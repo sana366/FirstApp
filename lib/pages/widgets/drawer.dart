@@ -1,13 +1,13 @@
-// import 'dart:js_util';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_myapp/pages/home_page.dart';
 import 'package:flutter_application_myapp/pages/view_profile.dart';
 
-import '../profile.dart';
+// import '../profile.dart';
 
 class Mydrawer extends StatefulWidget {
-  const Mydrawer({super.key});
+  const Mydrawer({key});
 
   @override
   State<Mydrawer> createState() => _MydrawerState();

@@ -1,18 +1,19 @@
-import 'dart:convert';
-import 'dart:async';
+// import 'dart:convert';
+// import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_myapp/Model/profile/dataModel.dart';
-import 'package:flutter_application_myapp/Model/profile/mainModel.dart';
-import 'package:flutter_application_myapp/pages/EditProfile.dart';
+// import 'package:flutter_application_myapp/Model/profile/dataModel.dart';
+// import 'package:flutter_application_myapp/Model/profile/mainModel.dart';
+// import 'package:flutter_application_myapp/pages/EditProfile.dart';
 import 'package:flutter_application_myapp/pages/widgets/drawer.dart';
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
 
 import 'login.dart';
 
+// ignore: must_be_immutable
 class Profile_page extends StatefulWidget {
   String name;
   String Fathername;
@@ -45,27 +46,28 @@ class Profile_page extends StatefulWidget {
 class _Profile_pageState extends State<Profile_page> {
 
 
-  int _value = 1;
-  int _Value = 1;
+  // int _value = 1;
+  // int _Value = 1;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      TextEditingController _rollno = TextEditingController();
-      TextEditingController _name = TextEditingController();
-      TextEditingController _Fathername = TextEditingController();
-      TextEditingController _CNIC = TextEditingController();
-      TextEditingController _Cellno = TextEditingController();
-      TextEditingController _Email = TextEditingController();
-      TextEditingController _phoneno = TextEditingController();
-      TextEditingController _Domicile = TextEditingController();
-      TextEditingController _Paddress = TextEditingController();
-      TextEditingController _regno = TextEditingController();
+      // TextEditingController _rollno = TextEditingController();
+      // TextEditingController _name = TextEditingController();
+      // TextEditingController _Fathername = TextEditingController();
+      // TextEditingController _CNIC = TextEditingController();
+      // TextEditingController _Cellno = TextEditingController();
+      // TextEditingController _Email = TextEditingController();
+      // TextEditingController _phoneno = TextEditingController();
+      // TextEditingController _Domicile = TextEditingController();
+      // TextEditingController _Paddress = TextEditingController();
+      // TextEditingController _regno = TextEditingController();
 
       final String baseUrl = 'https://studentportal.uoh.edu.pk/api_profile';
 
       Future<void> login(String device, String token, String rollno) async {
+        // ignore: unused_local_variable
         var headers = {
           'Cookie':
               'Cookie_1=value; ci_session=s73jortq79ag29uurj3d46gigptnsk6i'
@@ -669,7 +671,7 @@ class _Profile_pageState extends State<Profile_page> {
           )),
         ),
       ),
-      body: EditProfile(),
+      // body: EditProfile(),
 
       //   SingleChildScrollView(
       //     child: Column(
